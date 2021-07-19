@@ -1,40 +1,51 @@
 package lesson1
 
 import (
-	"bytes"
 	"fmt"
 	"os"
+	"time"
 )
 
-func ReadMyFile(filename string) (string, error) {
-	file, err := os.Open(filename)
+// Gets the first argument and creates a file
+func MyFile() error {
+	defer func() {
+		r := recover()
+		if r != nil {
+			fmt.Printf("Paniced error = %v\n", r)
+		}
+	}()
+
+	filename := os.Args[1]
+
+	err := CreateFile(filename)
 
 	if err != nil {
-		return "", err
+		now := time.Now()
+		return WrapLesson1Error(
+			fmt.Errorf("Create file %s error: %w ", filename, err),
+			now.Unix(),
+		)
 	}
-	defer file.Close()
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(file)
-	contents := buf.String()
 
-	return contents, nil
+	fmt.Printf("File %s created!\n", filename)
+	return nil
 }
 
+// Creates a file and returns an error
 func CreateFile(filename string) error {
 
 	file, err := os.Create(filename)
 
-	if err != nil {
-		return err
-	}
-
 	defer func() {
 		err = file.Close()
 
-		// Обратите внимание: при закрытии файла также возможна ошибка
 		if err != nil {
-			fmt.Printf("Error close file %s", filename)
+			fmt.Printf("Error close file %s \n", filename)
 		}
 	}()
+
+	if err != nil {
+		return err
+	}
 	return nil
 }

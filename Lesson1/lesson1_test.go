@@ -1,61 +1,57 @@
 package lesson1
 
 import (
-	"reflect"
+	"os"
 	"testing"
 )
 
-func TestOpenMyFileFunc(t *testing.T) {
+func TestMyFileFunc(t *testing.T) {
 
 	tests := []struct {
 		name      string
 		arg       string
-		want      string
 		wantErr   bool
 		wantPanic bool
 	}{
-		// arg is exist and File is exist
+		// arg is exist and FileName is correct
 		{
 			name:      "1",
-			arg:       `testfile.txt`,
-			want:      `some text`,
+			arg:       "testfile.txt",
 			wantErr:   false,
 			wantPanic: false,
 		},
-		// arg is exist and File is not exist
+		// arg is exist and File is not correct
 		{
-			name:      "2",
-			arg:       `testfile`,
-			want:      ``,
+			name: "2",
+			arg:  "\\",
+
 			wantErr:   true,
 			wantPanic: false,
 		},
 		// arg is not exist
 		{
 			name:      "3",
-			arg:       ``,
-			want:      "",
+			arg:       "",
 			wantErr:   true,
 			wantPanic: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			os.Args = []string{"", tt.arg}
 			defer func() {
 				r := recover()
 				if (r != nil) != tt.wantPanic {
-					t.Errorf("OpenMyFile() paniced when wantPanic = %v", tt.wantPanic)
+					t.Errorf("MyFile() paniced when wantPanic = %v", tt.wantPanic)
 				}
 			}()
 
-			got, err := ReadMyFile(tt.arg)
+			err := MyFile()
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ReadMyFile() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("MyFile() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ReadMyFile() = %v, want %v", got, tt.want)
-			}
+
 		})
 	}
 }
