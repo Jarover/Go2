@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	_ "gopkg.in/yaml.v2"
+	_ "gopkg.in/yaml.v3"
 )
 
 // Gets the first argument and creates a file
