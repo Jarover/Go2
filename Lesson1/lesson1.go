@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+	_ "gopkg.in/yaml.v2"
 )
 
 // Gets the first argument and creates a file
