@@ -1,9 +1,9 @@
 package main
 
-import "github.com/Jarover/Go2/lesson4"
+import "github.com/Jarover/Go2/lesson5"
 
 func main() {
-	//lesson4.WithWorkers()
-	lesson4.WithSigterm()
 
+	//lesson5.WaitDoneAllGoroutine(100)
+	lesson5.UnlocMutexWithDefer(10)
 }
