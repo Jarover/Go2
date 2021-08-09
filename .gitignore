@@ -3,3 +3,4 @@
 /.vscode
 .gitignore 
 go2.exe
+trace.out
