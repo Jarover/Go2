@@ -7,38 +7,43 @@ import (
 )
 
 //InQuery - получет строку sql запроса и преобразует ее, в зависимости от аргументов
-func InQuery(query string, args ...interface{}) (string,[]interface{}) {
+func InQuery(query string, args ...interface{}) (string, []interface{}) {
 
-	var outArgs  []interface{}
-	out := ""
-	arr := strings.Split(query,"?")
+	var outArgs []interface{}
 
+	outQuery := ""
+	// разбиваем строку на подстроки по символу вопроса
+	arr := strings.Split(query, "?")
+
+	// цикл по агрументам
 	for i, n := range args {
 
 		p := parseArg(n)
-		out = out + arr[i]
+		outQuery = outQuery + arr[i]
+
 		for j := 0; j < len(p); j++ {
-			outArgs = append(outArgs,p[j])
-			if j>0 {
-				out = out + ",?"
+			outArgs = append(outArgs, p[j])
+			if j > 0 {
+				outQuery = outQuery + ",?"
 			} else {
-				out = out + "?"
+				outQuery = outQuery + "?"
 			}
 
 		}
 
 	}
-	fmt.Println(out)
+	fmt.Println(outQuery)
 	fmt.Println(outArgs)
-	return query,outArgs
+	return outQuery, outArgs
 }
 
+//parseArg - принимает аргумент и возвращает слайс интерфесов
 func parseArg(arg interface{}) []interface{} {
 	var out []interface{}
 	valueOf := reflect.ValueOf(arg)
 	fmt.Println("value:", valueOf.Kind())
 
-
+	// определяем тип
 	switch v := reflect.ValueOf(arg); v.Kind() {
 	case reflect.Slice:
 
@@ -48,13 +53,12 @@ func parseArg(arg interface{}) []interface{} {
 
 			out = append(out, s.Index(i))
 		}
-	case reflect.Bool,  reflect.String,reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+	case reflect.Bool, reflect.String, reflect.Float32, reflect.Float64, reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		out = append(out, arg)
 
 	default:
-		fmt.Printf("unhandled kind %s", v.Kind())
+		fmt.Printf("Неопознаный тип %s", v.Kind())
 	}
-
 
 	return out
 }
